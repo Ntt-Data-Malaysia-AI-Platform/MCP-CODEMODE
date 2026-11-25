@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Token Lens: MCP vs Code Mode</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Token Lens</h1>
+      <p class="sub">Same MCP server. Same question. Two ways for the model to use it, and what each costs in tokens.</p>
+    </div>
+    <div class="badges" id="badges"></div>
+  </header>
+
+  <div class="sim-banner" id="simBanner" hidden>
+    Simulated mode: no <code>GEMINI_API_KEY</code> set, so token counts are estimates (characters ÷ 4). Use this for rehearsal only.
+  </div>
+
+  <section class="setup">
+    <div class="scenarios" id="scenarios"></div>
+    <div class="prompt-row">
+      <textarea id="prompt" rows="3" spellcheck="false"></textarea>
+      <div class="buttons">
+        <button class="primary" id="runBoth">Run both</button>
+        <div class="secondary-buttons">
+          <button id="runDirect">Direct MCP only</button>
+          <button id="runCode">Code mode only</button>
+        </div>
+      </div>
+    </div>
+    <p class="expect" id="expect"></p>
+  </section>
+
+  <section class="verdict" id="verdict" hidden></section>
+
+  <main class="lanes">
+    <article class="lane" id="lane-direct">
+      <header>
+        <h2><span class="dot direct"></span>Direct MCP</h2>
+        <p>The model calls each MCP tool itself. Every tool result is added to the conversation, and the whole conversation is sent again on every call.</p>
+      </header>
+      <div class="lane-body"></div>
+    </article>
+    <article class="lane" id="lane-code">
+      <header>
+        <h2><span class="dot code"></span>Code mode</h2>
+        <p>The model writes one script. The script calls the same MCP tools inside a sandbox, and only its small result goes back to the model.</p>
+      </header>
+      <div class="lane-body"></div>
+    </article>
+  </main>
+
+  <section class="history">
+    <div class="history-head">
+      <h2>Run history</h2>
+      <span class="muted" id="historySource"></span>
+      <button id="refreshHistory" class="small">Refresh</button>
+    </div>
+    <div class="table-wrap"><table id="historyTable"></table></div>
+  </section>
+
+  <template id="laneTemplate">
+    <div class="big">
+      <div class="big-num" data-k="total">0</div>
+      <div class="big-label">total tokens <span class="status" data-k="status">idle</span></div>
+    </div>
+    <dl class="stats">
+      <div><dt>LLM calls</dt><dd data-k="llm">0</dd></div>
+      <div><dt>Tool calls</dt><dd data-k="tools">0</dd></div>
+      <div><dt>Input</dt><dd data-k="input">0</dd></div>
+      <div><dt>Output</dt><dd data-k="output">0</dd></div>
+      <div><dt>Thinking</dt><dd data-k="thinking">0</dd></div>
+      <div><dt>Est. cost</dt><dd data-k="cost">$0</dd></div>
+      <div><dt>Time</dt><dd data-k="time">0 s</dd></div>
+      <div><dt>Cached input</dt><dd data-k="cached">0</dd></div>
+    </dl>
+
+    <h3>Tokens per LLM call <span class="muted">(same scale in both lanes)</span></h3>
+    <div class="bars" data-k="bars"><p class="muted empty">No calls yet.</p></div>
+
+    <h3>Where the tool data went</h3>
+    <div class="flow">
+      <div class="flow-row"><span>Into the model's context</span><div class="meter"><i data-k="ctxBar"></i></div><b data-k="ctxBytes">0 B</b></div>
+      <div class="flow-row"><span>Kept in the sandbox</span><div class="meter"><i class="sandbox" data-k="sbxBar"></i></div><b data-k="sbxBytes">0 B</b></div>
+    </div>
+
+    <h3>Timeline</h3>
+    <ol class="timeline" data-k="timeline"></ol>
+
+    <h3>Answer</h3>
+    <div class="answer" data-k="answer"><p class="muted">Waiting for a run.</p></div>
+  </template>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>

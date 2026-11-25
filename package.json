@@ -1,0 +1,28 @@
+﻿{
+  "name": "token-lens-mcp-vs-code-mode",
+  "version": "1.0.0",
+  "description": "Live demo: token consumption of direct MCP tool calling vs code mode, with Gemini + Supabase",
+  "scripts": {
+    "start": "node --use-system-ca src/server.js",
+    "dev": "node --use-system-ca --watch src/server.js",
+    "seed": "node --use-system-ca scripts/seed.js",
+    "mcp:stdio": "node src/mcp-stdio.js",
+    "test": "node --use-system-ca scripts/smoke-test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "^3.6.1",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@supabase/supabase-js": "^2.119.2",
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "quickjs-emscripten": "^0.32.0",
+    "zod": "^4.6.7"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

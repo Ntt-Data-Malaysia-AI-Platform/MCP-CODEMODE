@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gemini Frontier Operations</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ======================= LOGIN ======================= -->
+  <section id="login" class="login hex-bg">
+    <div class="login-hero">
+      <div class="brand"><img class="logo logo-lg" src="assets/ntt-data-logo.png" alt="NTT DATA" /></div>
+      <h1>Gemini Frontier Operations<br />for the <em>Modern Enterprise</em></h1>
+      <p class="lead">A multi-agent platform powered by <b>Google Gemini</b> and <b>Google Cloud</b> that finds every telecom customer the right plan, and shows exactly what it costs to run.</p>
+      <div class="powered">Powered by <b>Google Gemini</b><span>|</span><b>Google Cloud</b></div>
+      <div class="pillars">
+        <div><b>Assist</b><span>Instant, cited answers on plans, usage and bills</span></div>
+        <div><b>Act</b><span>Agents analyse 12 months of usage and cost every plan</span></div>
+        <div><b>Governed</b><span>Every plan change approved by a person and logged</span></div>
+      </div>
+    </div>
+    <form class="login-card" id="loginForm" autocomplete="off">
+      <h2>Sign in</h2>
+      <p class="muted">Telecom demo workspace</p>
+      <label>Username<input id="user" name="username" required /></label>
+      <label>Password<input id="pass" name="password" type="password" required /></label>
+      <p class="login-error" id="loginError" hidden>Incorrect username or password.</p>
+      <button class="btn-gold" type="submit">Sign in</button>
+      <p class="fine">Secure demo workspace · sample customers only</p>
+    </form>
+  </section>
+
+  <!-- ======================= APP ======================= -->
+  <div id="app" class="app hex-bg" hidden>
+    <header class="topbar">
+      <div class="brand"><img class="logo" src="assets/ntt-data-logo.png" alt="NTT DATA" /><span class="sep"></span><span class="product-name">Gemini Frontier Operations · Telecom</span></div>
+      <div class="top-right">
+        <span class="chip model-chip"><span class="spark">✦</span> Gemini 3.8 Flash</span>
+        <a class="chip neon-link" href="#measure">How we measure</a>
+        <div class="profile" id="profile">
+          <button class="user-chip" id="profileBtn" aria-haspopup="menu" aria-expanded="false">
+            <span class="avatar" id="avatar">D</span><span id="whoami">Deepan</span><span class="caret">▾</span>
+          </button>
+          <div class="user-menu" id="userMenu" role="menu" hidden>
+            <div class="um-head">
+              <span class="avatar lg" id="avatarLg">D</span>
+              <div><b id="umName">Deepan</b><span id="umUser">Nttdata</span></div>
+            </div>
+            <div class="um-row"><span>Workspace</span><b>Telecom · NTT DATA</b></div>
+            <div class="um-row"><span>Model</span><b>Gemini 3.8 Flash</b></div>
+            <button class="um-logout" id="logout" role="menuitem">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero">
+        <h1>Find every customer the <em>best plan</em>, and see what it costs to run</h1>
+        <p class="lead">Five agents analyse usage, the plan catalog, products and savings. The same question runs two ways at once: the agents call MCP tools directly, or they write code that calls the tools in a sandbox.</p>
+      </section>
+
+      <section class="panel customer">
+        <div class="customer-pick" id="customerPick"></div>
+        <div class="account" id="account"></div>
+      </section>
+
+      <section class="cta-row">
+        <button class="btn-gold big" id="runBtn">Find my best plan &amp; savings</button>
+        <label class="speed">Speed
+          <select id="speed">
+            <option value="1">Real time</option>
+            <option value="2" selected>2×</option>
+            <option value="5">5×</option>
+          </select>
+        </label>
+        <p class="cta-note">Runs <b>Direct MCP</b> and <b>Code mode</b> side by side on the same customer.</p>
+      </section>
+
+      <section class="verdict" id="verdict" hidden></section>
+
+      <section class="lanes">
+        <article class="lane direct" id="lane-direct">
+          <header>
+            <div class="lane-title"><span class="dot"></span><h2>Direct MCP connector</h2></div>
+            <p>Each agent calls the MCP tools itself. Every result is added to its conversation and sent to the model again on the next call.</p>
+          </header>
+          <div class="lane-body"></div>
+        </article>
+        <article class="lane code" id="lane-code">
+          <header>
+            <div class="lane-title"><span class="dot"></span><h2>Code mode</h2></div>
+            <p>Each agent writes a short script. The script calls the same MCP tools inside a sandbox, and only its small result goes back to the model.</p>
+          </header>
+          <div class="lane-body"></div>
+        </article>
+      </section>
+
+      <section class="results" id="results" hidden>
+        <div class="reco panel" id="reco"></div>
+        <div class="panel agent-chart">
+          <h3>Tokens per agent</h3>
+          <p class="muted">Same scale for both modes.</p>
+          <div id="agentChart"></div>
+          <div class="legend"><span><i class="lg-direct"></i>Direct MCP</span><span><i class="lg-code"></i>Code mode</span></div>
+        </div>
+      </section>
+
+      <section class="measure" id="measure">
+        <div class="measure-head">
+          <span class="neon-kicker">Transparency</span>
+          <h2>How we measure tokens and cost</h2>
+          <p>Every LLM call is measured the same way in both modes. The only difference is <b>what goes into the call</b>.</p>
+        </div>
+
+        <div class="formulas">
+          <div class="formula">
+            <span class="f-n">1</span>
+            <h4>Tokens</h4>
+            <div class="eq">tokens ≈ characters ÷ 4</div>
+            <p>Gemini's tokenizer averages about 4 characters per token for English and JSON. Every piece of text sent to or written by the model is measured this way.</p>
+          </div>
+          <div class="formula">
+            <span class="f-n">2</span>
+            <h4>Input, on every call</h4>
+            <div class="eq"><i class="p-sys"></i>system + <i class="p-tools"></i>tools + <i class="p-req"></i>request + <i class="p-hist"></i>conversation</div>
+            <p>The model has no memory between calls, so everything is sent again each time: the agent's role, the tool definitions, the request and earlier agents' handoffs, and the conversation so far.</p>
+          </div>
+          <div class="formula">
+            <span class="f-n">3</span>
+            <h4>Output</h4>
+            <div class="eq">what the model writes</div>
+            <p>Tool-call requests (direct MCP), the script (code mode), summaries and the final answer. With direct MCP the Savings Calculator writes out its own working, one line per plan per month.</p>
+          </div>
+          <div class="formula">
+            <span class="f-n">4</span>
+            <h4>Cost</h4>
+            <div class="eq">input × $0.375 / 1M + output × $1.88 / 1M</div>
+            <p>Gemini 3.8 Flash pricing per 1 million tokens, in US dollars, bought directly from Google. Output costs about 5× more than input.</p>
+          </div>
+        </div>
+
+        <div class="compare">
+          <div class="cmp direct">
+            <h4><span class="dot"></span>Direct MCP: what grows</h4>
+            <p>Every tool result is added to the <b>conversation</b> and sent again on every later call. After two half-year pages of daily usage for Deepan's three lines, about 115 KB of raw records sits in the conversation, so the Usage Analyst's last call alone carries about 31,000 input tokens.</p>
+          </div>
+          <div class="cmp code">
+            <h4><span class="dot"></span>Code mode: what stays small</h4>
+            <p>Tool results stay inside the <b>sandbox</b> and are counted as KB, not tokens. Only the script's return value, usually 1–3 KB, joins the conversation.</p>
+          </div>
+        </div>
+
+        <div class="breakdown" id="breakdown">
+          <div class="bd-head">
+            <h3>Call-by-call breakdown</h3>
+            <div class="tabs" role="tablist">
+              <button class="tab active" data-mode="direct" role="tab">Direct MCP</button>
+              <button class="tab" data-mode="code" role="tab">Code mode</button>
+            </div>
+          </div>
+          <div class="bd-legend">
+            <span><i class="p-sys"></i>System prompt</span><span><i class="p-tools"></i>Tool definitions</span>
+            <span><i class="p-req"></i>Request + handoffs</span><span><i class="p-hist"></i>Conversation so far (incl. tool results)</span>
+            <span><i class="p-out"></i>Output</span>
+          </div>
+          <div id="bdTable"><p class="muted">Run "Find my best plan &amp; savings" to see every LLM call broken down here.</p></div>
+        </div>
+
+        <div class="not-counted">
+          <h4>Not included in these numbers</h4>
+          <ul>
+            <li><b>Thinking tokens:</b> Gemini's internal reasoning, billed as output. It would add to both modes.</li>
+            <li><b>Caching discounts:</b> Gemini can discount repeated input, which would lower direct MCP's real cost (not its token count).</li>
+            <li><b>Retries</b> after errors or rate limits.</li>
+            <li><b>Time</b> is modelled: 0.45 s per call + 0.04 ms per input token + 4 ms per output token + 160 ms per direct tool call (30 ms in the sandbox).</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel audit" id="audit" hidden>
+        <h3>Audit log</h3>
+        <ol id="auditList"></ol>
+      </section>
+
+      <p class="footnote">The BSS tools serve 12 months of daily usage per line, a 20-plan Malaysian catalog in RM, devices and promotions. Code-mode scripts run on that data, and token counts are measured from exactly what each approach sends to the model (about 4 characters per token). Customers and prices are sample values.</p>
+    </main>
+  </div>
+
+  <template id="laneTpl">
+    <div class="big-row">
+      <div><div class="big" data-k="total">0</div><div class="big-label">total tokens <span class="status" data-k="status">ready</span></div></div>
+      <div class="cost"><div data-k="cost">$0.0000</div><span>est. model cost</span></div>
+    </div>
+    <dl class="stats">
+      <div><dt>LLM calls</dt><dd data-k="llm">0</dd></div>
+      <div><dt>Tool calls</dt><dd data-k="tools">0</dd></div>
+      <div><dt>Input</dt><dd data-k="input">0</dd></div>
+      <div><dt>Output</dt><dd data-k="output">0</dd></div>
+      <div><dt>Time</dt><dd data-k="time">0.0 s</dd></div>
+    </dl>
+    <h3>Agents</h3>
+    <ol class="agents" data-k="agents"></ol>
+    <h3>Where the tool data went</h3>
+    <div class="flow">
+      <div class="flow-row"><span>Sent into the model</span><div class="meter"><i class="m-ctx" data-k="ctxBar"></i></div><b data-k="ctx">0 KB</b></div>
+      <div class="flow-row"><span>Kept in the sandbox</span><div class="meter"><i class="m-sbx" data-k="sbxBar"></i></div><b data-k="sbx">0 KB</b></div>
+    </div>
+    <h3>Live activity</h3>
+    <ol class="log" data-k="log"><li class="muted">Waiting for a run.</li></ol>
+  </template>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/mcp.js"></script>
+  <script src="js/scripts.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
